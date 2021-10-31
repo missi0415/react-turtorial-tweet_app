@@ -16,6 +16,7 @@ module.exports = {
           plugins: [
             'react-html-attrs',
             [require('@babel/plugin-proposal-decorators'), {legacy: true}]
+            // Layout.jsの@connectを有効化させる記述
           ],
           presets: ['@babel/preset-react', '@babel/preset-env']
         }

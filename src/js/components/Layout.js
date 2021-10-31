@@ -1,18 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
+// client.js以外でreduxを使用する場合はconnectとしてインストールする必要がある
 
 import { fetchUser } from "../actions/userActions";
 import { fetchTweets } from "../actions/tweetsActions";
+import { WebpackOptionsDefaulter } from "webpack";
 
 @connect((store) => {
+// decolatorという機能 babel-plugin-transform-decorators-legacy パッケージによって有効にされる機能
+// webpack.config でlegacy:true オプションをつける必要がある
   return {
-    user:store.userReducer.user,
+    user: store.userReducer.user,
     userFetched: store.userReducer.fetched,
     tweets: store.tweetsReducer.tweets,
     tweetsFetching: store.tweetsReducer.fetching
   };
 })
-
 export default class Layout extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchUser());
@@ -23,12 +26,20 @@ export default class Layout extends React.Component {
   render() {
     const { user, tweets, tweetsFetching } = this.props;
 
-    if (tweetsFetching === true ){
-      return (<div>fetxhing...</div>);
+    if (tweetsFetching === true) {
+      return (<div>fetching...</div>);
     }
-    if (!tweets.length){
+    if (!tweets.length) {
       return <button onClick={this.fetchTweets.bind(this)}>load tweets</button>;
     }
-    const mappedTweets = tweets.map
+
+    const mappedTweets = tweets.map(tweet => <li key={tweet.id}>{tweet.text}</li>);
+
+    return (
+      <div>
+        <h1>{user.name}</h1>
+        <ul>{mappedTweets}</ul>
+      </div>
+    );
   }
 }
